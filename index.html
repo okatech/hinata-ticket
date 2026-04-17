@@ -92,54 +92,111 @@
   .name.show{opacity:1;transform:translateY(0);}
   @keyframes shine{0%{background-position:0% 50%;}100%{background-position:300% 50%;}}
 
-  /* === チケット === */
-  .ticket-wrap{
-    position:relative;width:min(88vw,360px);height:200px;
+  /* === 封筒 === */
+  .envelope-wrap{
+    position:relative;width:min(88vw,360px);height:240px;
     opacity:0;transform:translateY(40px) scale(.85);
     transition:all .9s .6s cubic-bezier(.2,.9,.3,1.4);
+    perspective:900px;
   }
-  .ticket-wrap.show{opacity:1;transform:translateY(0) scale(1);}
-  .ticket-track{
-    position:absolute;inset:0;
-    background:linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.05));
-    border:2px dashed rgba(255,255,255,.4);
-    border-radius:20px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:.9rem;color:rgba(255,255,255,.7);font-weight:700;letter-spacing:2px;
-  }
-  .ticket{
-    position:absolute;left:0;top:0;width:100%;height:100%;
-    background:
-      radial-gradient(circle at 15% 50%,transparent 14px,#fff3 14px 15px,transparent 15px),
-      radial-gradient(circle at 85% 50%,transparent 14px,#fff3 14px 15px,transparent 15px),
-      linear-gradient(135deg,#fff2a8 0%,#ffd166 40%,#ff9e4d 100%);
-    border-radius:20px;
-    box-shadow:
-      0 8px 24px rgba(255,158,77,.5),
-      0 0 40px rgba(255,209,102,.6),
-      inset 0 2px 10px rgba(255,255,255,.5);
-    cursor:grab;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    padding:16px 40px;
-    color:#8a3a00;
-    transition:transform .35s cubic-bezier(.2,.9,.3,1.4);
-    will-change:transform;
-  }
-  .ticket:active{cursor:grabbing;}
-  .ticket .emoji{font-size:2.2rem;margin-bottom:4px;}
-  .ticket .ttl{font-weight:900;font-size:1.35rem;letter-spacing:1px;text-shadow:0 1px 0 #fff8;}
-  .ticket .sub{font-size:.78rem;margin-top:4px;font-weight:700;opacity:.8;}
-  .ticket .arrow{
-    position:absolute;right:14px;top:50%;transform:translateY(-50%);
-    font-size:1.4rem;animation:slide 1.2s infinite ease-in-out;
-  }
-  @keyframes slide{0%,100%{transform:translateY(-50%) translateX(0);opacity:.6;}50%{transform:translateY(-50%) translateX(8px);opacity:1;}}
+  .envelope-wrap.show{opacity:1;transform:translateY(0) scale(1);}
 
-  .ticket-perf{
-    position:absolute;left:0;right:0;top:50%;height:2px;
-    background-image:linear-gradient(to right,#fff 50%,transparent 50%);
-    background-size:10px 2px;transform:translateY(-50%);opacity:.5;pointer-events:none;
+  .envelope{
+    position:absolute;inset:0;border-radius:14px;overflow:visible;
+    background:linear-gradient(180deg,#ff8fb8 0%,#ff5fa0 100%);
+    box-shadow:0 10px 30px rgba(255,95,160,.5),inset 0 -4px 0 rgba(0,0,0,.08);
   }
+  .env-body{
+    position:absolute;inset:0;border-radius:14px;
+    background:linear-gradient(180deg,#ffaed1 0%,#ff7fb5 100%);
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+  }
+  .env-body::before{
+    content:'♥ ♡ ♥';position:absolute;font-size:1.4rem;color:#fff6;letter-spacing:10px;
+    top:55%;transform:translateY(-50%);
+  }
+
+  /* 上のフタ（三角） */
+  .env-flap{
+    position:absolute;left:0;right:0;top:0;height:55%;
+    background:linear-gradient(180deg,#ff6faa 0%,#ff4d95 100%);
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:top center;
+    transition:transform .8s cubic-bezier(.5,-.3,.3,1.6);
+    z-index:3;
+    box-shadow:0 2px 4px rgba(0,0,0,.1);
+  }
+  .env-flap.open{transform:rotateX(180deg);}
+
+  /* 封印シール（ハート） */
+  .seal{
+    position:absolute;left:50%;top:42%;transform:translate(-50%,-50%) rotate(0deg);
+    width:56px;height:56px;
+    background:radial-gradient(circle at 30% 30%,#fff6f8 0%,#ff4d8e 60%,#c01e6e 100%);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.7rem;z-index:5;
+    box-shadow:0 3px 8px rgba(0,0,0,.25),inset 0 0 0 2px #fff6;
+    transition:transform .4s,opacity .4s;
+  }
+  .seal.broken{transform:translate(-50%,-50%) rotate(25deg) scale(.5);opacity:0;}
+
+  /* 切り取り線＆ハサミ */
+  .cut-guide{
+    position:absolute;left:8%;right:8%;top:30%;height:24px;
+    display:flex;align-items:center;justify-content:space-between;
+    z-index:4;pointer-events:none;
+    font-size:.75rem;color:#fff;font-weight:900;letter-spacing:1px;
+    text-shadow:0 1px 2px #0004;
+  }
+  .cut-line{
+    position:absolute;left:10%;right:10%;top:30%;height:3px;z-index:4;pointer-events:none;
+    background-image:linear-gradient(to right,#fff 60%,transparent 60%);
+    background-size:12px 3px;
+    -webkit-mask-image:linear-gradient(to right,#000 var(--cut,0%),#000 var(--cut,0%),transparent var(--cut,0%));
+            mask-image:linear-gradient(to right,#000 var(--cut,0%),transparent var(--cut,0%));
+    opacity:.9;
+  }
+  .scissors{
+    position:absolute;top:30%;left:10%;transform:translate(-50%,-50%);
+    font-size:1.8rem;z-index:6;pointer-events:none;
+    transition:left .05s linear;
+    filter:drop-shadow(0 2px 4px #0004);
+    animation:wiggle 1s infinite ease-in-out;
+  }
+  @keyframes wiggle{0%,100%{transform:translate(-50%,-50%) rotate(-5deg);}50%{transform:translate(-50%,-50%) rotate(5deg);}}
+
+  .cut-hint{
+    position:absolute;left:0;right:0;top:calc(30% + 22px);text-align:center;
+    color:#fff;font-weight:900;font-size:.85rem;z-index:4;pointer-events:none;
+    text-shadow:0 1px 3px #0006;letter-spacing:1px;
+    animation:bob 1.2s infinite ease-in-out;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(3px);}}
+
+  /* タッチ領域（封筒全体） */
+  .cut-surface{position:absolute;inset:0;z-index:7;cursor:grab;touch-action:none;}
+  .cut-surface:active{cursor:grabbing;}
+
+  /* 中のチケット */
+  .ticket{
+    position:absolute;left:6%;right:6%;top:60%;height:75%;
+    background:
+      radial-gradient(circle at 8% 50%,transparent 10px,#fff4 10px 11px,transparent 11px),
+      radial-gradient(circle at 92% 50%,transparent 10px,#fff4 10px 11px,transparent 11px),
+      linear-gradient(135deg,#fff2a8 0%,#ffd166 40%,#ff9e4d 100%);
+    border-radius:14px;
+    box-shadow:0 8px 24px rgba(255,158,77,.6),0 0 30px rgba(255,209,102,.7),inset 0 2px 10px rgba(255,255,255,.5);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:10px;color:#8a3a00;
+    transition:top .9s cubic-bezier(.2,.9,.3,1.4),transform .9s cubic-bezier(.2,.9,.3,1.4),opacity .5s;
+    z-index:2;
+  }
+  .ticket.out{top:-20%;transform:rotate(-3deg) scale(1.05);z-index:8;}
+  .ticket .emoji{font-size:1.8rem;}
+  .ticket .ttl{font-weight:900;font-size:1.15rem;letter-spacing:1px;text-shadow:0 1px 0 #fff8;text-align:center;}
+  .ticket .sub{font-size:.72rem;margin-top:2px;font-weight:700;opacity:.8;}
 
   /* ✅ ゲット完了 */
   .claimed{
@@ -147,6 +204,7 @@
     text-shadow:0 0 18px #7af0ff,0 0 30px #4ad9ff;
     opacity:0;transform:scale(.6);transition:all .5s cubic-bezier(.2,.9,.3,1.6);
     text-align:center;
+    margin-top:20px;
   }
   .claimed.show{opacity:1;transform:scale(1);}
 
@@ -187,14 +245,21 @@
   <div class="congrats" id="cong">よくがんばった！</div>
   <div class="name" id="nm">ひなたちゃん 🎉</div>
 
-  <div class="ticket-wrap" id="tw">
-    <div class="ticket-track">→ スワイプしてゲット →</div>
-    <div class="ticket" id="ticket">
-      <div class="ticket-perf"></div>
-      <div class="emoji">🎁🧸</div>
-      <div class="ttl">おもちゃをかうチケット</div>
-      <div class="sub">★ ひなたちゃん せんよう ★</div>
-      <div class="arrow">➜</div>
+  <div class="envelope-wrap" id="tw">
+    <div class="envelope">
+      <div class="env-body">
+        <div class="ticket" id="ticket">
+          <div class="emoji">🎁🧸</div>
+          <div class="ttl">おもちゃをかうチケット</div>
+          <div class="sub">★ ひなたちゃん せんよう ★</div>
+        </div>
+      </div>
+      <div class="env-flap" id="flap"></div>
+      <div class="seal" id="seal">💖</div>
+      <div class="cut-line" id="cutLine" style="--cut:0%"></div>
+      <div class="scissors" id="scissors">✂️</div>
+      <div class="cut-hint" id="cutHint">ゆびで ここを きってね →</div>
+      <div class="cut-surface" id="cutSurface"></div>
     </div>
   </div>
 
@@ -302,54 +367,67 @@ document.getElementById('goBtn').addEventListener('click',(ev)=>{
   },600);
 });
 
-/* ─── チケットスワイプ ─── */
-let dragging=false, startX=0, curX=0, maxX=0, claimedDone=false;
+/* ─── 封筒を指で切って開ける ─── */
+const flap=document.getElementById('flap');
+const seal=document.getElementById('seal');
+const cutLine=document.getElementById('cutLine');
+const scissors=document.getElementById('scissors');
+const cutHint=document.getElementById('cutHint');
+const cutSurface=document.getElementById('cutSurface');
+
+let dragging=false, startX=0, progress=0, claimedDone=false;
+
+function getX(e){return (e.touches?e.touches[0]:e).clientX;}
 
 function onDown(e){
   if(claimedDone)return;
   dragging=true;
-  const p=e.touches?e.touches[0]:e;
-  startX=p.clientX;
-  maxX=tw.clientWidth-ticket.clientWidth; // 0 (同サイズ) なので余白で判定
-  maxX=tw.clientWidth*0.6;
-  ticket.style.transition='none';
+  startX=getX(e);
+  cutHint.style.opacity='0';
 }
 function onMove(e){
-  if(!dragging)return;
-  const p=e.touches?e.touches[0]:e;
-  curX=Math.max(0,p.clientX-startX);
-  ticket.style.transform=`translateX(${curX}px) rotate(${curX*0.03}deg)`;
-  if(curX>maxX){
-    claim();
+  if(!dragging||claimedDone)return;
+  const rect=cutSurface.getBoundingClientRect();
+  const x=getX(e)-rect.left;
+  const pct=Math.max(0,Math.min(100,(x/rect.width)*100));
+  progress=pct;
+  cutLine.style.setProperty('--cut',pct+'%');
+  scissors.style.left=Math.max(10,Math.min(90,pct))+'%';
+  if(pct>92){
+    openEnvelope();
   }
 }
 function onUp(){
-  if(!dragging)return;
   dragging=false;
-  if(!claimedDone){
-    ticket.style.transition='transform .4s cubic-bezier(.2,.9,.3,1.4)';
-    ticket.style.transform='translateX(0)';
+  if(!claimedDone && progress<92){
+    cutHint.style.opacity='1';
   }
 }
-function claim(){
+
+function openEnvelope(){
   if(claimedDone)return;
   claimedDone=true;dragging=false;
-  ticket.style.transition='transform .6s cubic-bezier(.4,0,.2,1),opacity .6s';
-  ticket.style.transform=`translateX(${innerWidth}px) rotate(30deg)`;
-  ticket.style.opacity='0';
+  cutLine.style.setProperty('--cut','100%');
+  seal.classList.add('broken');
+  scissors.style.display='none';
+  cutHint.style.display='none';
   setTimeout(()=>{
-    tw.style.display='none';
+    flap.classList.add('open');
+  },200);
+  setTimeout(()=>{
+    ticket.classList.add('out');
+  },600);
+  setTimeout(()=>{
     claimed.classList.add('show');
     again.classList.add('show');
-    // お祝い追加花火
-    for(let i=0;i<4;i++){
+    for(let i=0;i<5;i++){
       setTimeout(()=>firework(cvs.width*Math.random(),cvs.height*(0.2+Math.random()*0.3)),i*200);
     }
-  },500);
+  },1400);
 }
 
-ticket.addEventListener('mousedown',onDown);
-ticket.addEventListener('touchstart',onDown,{passive:true});
+cutSurface.addEventListener('mousedown',onDown);
+cutSurface.addEventListener('touchstart',onDown,{passive:true});
 addEventListener('mousemove',onMove);
 addEventListener('touchmove',onMove,{passive:true});
 addEventListener('mouseup',onUp);
