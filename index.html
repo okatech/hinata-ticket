@@ -412,15 +412,17 @@ function openEnvelope(){
   setTimeout(()=>flap.classList.add('open'),150);
   // 封筒全体をフェードアウト
   setTimeout(()=>envWrap.classList.add('gone'),700);
+  // 完全に消す
+  setTimeout(()=>envWrap.style.display='none',1400);
   // チケットがフェードイン
-  setTimeout(()=>ticket.classList.add('out'),900);
+  setTimeout(()=>ticket.classList.add('out'),1500);
   // お祝いメッセージと花火
   setTimeout(()=>{
     claimed.classList.add('show');
     for(let i=0;i<5;i++){
       setTimeout(()=>firework(cvs.width*Math.random(),cvs.height*(0.2+Math.random()*0.3)),i*200);
     }
-  },1600);
+  },2000);
 }
 
 cutSurface.addEventListener('mousedown',onDown);
