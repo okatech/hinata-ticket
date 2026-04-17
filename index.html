@@ -150,8 +150,9 @@
   }
   .claimed.show{opacity:1;transform:scale(1);}
 
-  /* === 花火 canvas === */
-  canvas#fw{position:absolute;inset:0;pointer-events:none;z-index:5;}
+  /* === 花火 canvas（画面のうしろ） === */
+  canvas#fw{position:fixed;inset:0;pointer-events:none;z-index:1;}
+  .screen{z-index:10;}
 
   /* もう一回ボタン */
   .again{
@@ -282,7 +283,10 @@ const ticket=document.getElementById('ticket');
 const claimed=document.getElementById('claimed');
 const again=document.getElementById('again');
 
-document.getElementById('goBtn').addEventListener('click',()=>{
+document.getElementById('goBtn').addEventListener('click',(ev)=>{
+  // ボタン位置からも花火！
+  const r=ev.currentTarget.getBoundingClientRect();
+  firework(r.left+r.width/2, r.top+r.height/2);
   start.classList.add('hidden');
   reward.classList.remove('hidden');
   reward.classList.add('active');
