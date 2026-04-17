@@ -105,8 +105,9 @@
     position:absolute;inset:0;
     perspective:900px;
     transition:opacity .6s,transform .6s;
+    z-index:1;
   }
-  .envelope-wrap.gone{opacity:0;transform:scale(.8);pointer-events:none;}
+  .envelope-wrap.gone{opacity:0;transform:scale(.8);pointer-events:none;visibility:hidden;transition:opacity .6s,transform .6s,visibility 0s .6s;}
 
   .envelope{
     position:absolute;inset:0;border-radius:14px;overflow:visible;
@@ -190,6 +191,7 @@
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     padding:18px 24px;color:#8a3a00;
     opacity:0;pointer-events:none;
+    z-index:20;
     transition:opacity .7s .3s,transform .9s .3s cubic-bezier(.2,.9,.3,1.6);
   }
   .ticket.out{opacity:1;transform:translateY(-50%) scale(1) rotate(-2deg);pointer-events:auto;}
