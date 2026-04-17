@@ -189,6 +189,11 @@
   .ticket .emoji{font-size:1.7rem;line-height:1;margin-top:2px;}
   .ticket .ttl{font-weight:900;font-size:1.05rem;letter-spacing:.5px;text-shadow:0 1px 0 #fff8;text-align:center;margin-top:2px;}
   .ticket .sub{font-size:.7rem;margin-top:2px;font-weight:700;opacity:.85;}
+  .ticket .limit{
+    margin-top:4px;font-size:.68rem;font-weight:900;line-height:1.3;
+    color:#c02a00;text-align:center;letter-spacing:.5px;
+    border-top:1.5px dashed #c02a0055;padding-top:4px;width:85%;
+  }
 
   /* ✅ ゲット完了 */
   .claimed{
@@ -203,17 +208,6 @@
   /* === 花火 canvas（画面のうしろ） === */
   canvas#fw{position:fixed;inset:0;pointer-events:none;z-index:1;}
   .screen{z-index:10;}
-
-  /* もう一回ボタン */
-  .again{
-    margin-top:28px;padding:12px 28px;border:none;border-radius:30px;
-    background:rgba(255,255,255,.2);color:#fff;font-family:inherit;font-weight:700;
-    font-size:.95rem;cursor:pointer;backdrop-filter:blur(8px);
-    border:1.5px solid rgba(255,255,255,.4);
-    opacity:0;transition:opacity .4s;
-  }
-  .again.show{opacity:1;}
-  .again:active{transform:scale(.95);}
 </style>
 </head>
 <body>
@@ -244,6 +238,7 @@
           <div class="emoji">🎁🧸</div>
           <div class="ttl">おもちゃをかうチケット</div>
           <div class="sub">★ ひなたちゃん せんよう ★</div>
+          <div class="limit">3,000えんまでのおもちゃ<br>1まい かぎり</div>
         </div>
       </div>
       <div class="env-flap" id="flap"></div>
@@ -256,7 +251,6 @@
   </div>
 
   <div class="claimed" id="claimed">✨ ゲット！ ✨<br><span style="font-size:1rem;font-weight:700;">おもちゃやさんに いこう！</span></div>
-  <button class="again" id="again">もういちど</button>
 </div>
 
 <script>
@@ -338,7 +332,6 @@ const nm=document.getElementById('nm');
 const tw=document.getElementById('tw');
 const ticket=document.getElementById('ticket');
 const claimed=document.getElementById('claimed');
-const again=document.getElementById('again');
 
 document.getElementById('goBtn').addEventListener('click',(ev)=>{
   // ボタン位置からも花火！
@@ -411,7 +404,6 @@ function openEnvelope(){
   },600);
   setTimeout(()=>{
     claimed.classList.add('show');
-    again.classList.add('show');
     for(let i=0;i<5;i++){
       setTimeout(()=>firework(cvs.width*Math.random(),cvs.height*(0.2+Math.random()*0.3)),i*200);
     }
@@ -425,8 +417,6 @@ addEventListener('touchmove',onMove,{passive:true});
 addEventListener('mouseup',onUp);
 addEventListener('touchend',onUp);
 
-/* ─── もういちど ─── */
-again.addEventListener('click',()=>location.reload());
 </script>
 </body>
 </html>
